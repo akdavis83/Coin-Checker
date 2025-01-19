@@ -39,87 +39,19 @@ bash
 Copy
 Edit
 npm install node-fetch bitcoin-address-validation ethers
-Create the Script
-Create a new file, balanceChecker.js, and copy the following code:
+Run check.js in the VS code console
 
-javascript
-Copy
-Edit
-const fetch = require('node-fetch');
-const bitcoinAddress = require('bitcoin-address-validation');
-const { ethers } = require("ethers");
 
-async function getBitcoinBalance(address) {
-    if (!bitcoinAddress.validate(address)) {
-        console.error("Invalid Bitcoin address.");
-        return null;
-    }
-    const apiUrl = `https://blockchain.info/balance?active=${address}`;
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        const balanceBTC = data[address].final_balance / 100000000;
-        return balanceBTC;
-    } catch (error) {
-        console.error("Error fetching Bitcoin balance:", error);
-        return null;
-    }
-}
-
-async function getEthereumBalance(address) {
-    if (!ethers.isAddress(address)) {
-        console.error("Invalid Ethereum address.");
-        return null;
-    }
-    const apiUrl = `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=YOUR_ETHERSCAN_API_KEY`;
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        if (data.status === "1") {
-            const balanceEth = ethers.formatEther(data.result);
-            return balanceEth;
-        } else {
-            throw new Error(`Error from Etherscan API: ${data.message}`);
-        }
-    } catch (error) {
-        console.error("Error fetching Ethereum balance:", error);
-        return null;
-    }
-}
-
-async function main() {
-    const btcAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"; // Example BTC Address
-    const ethAddress = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"; // Example ETH Address
-
-    console.log("Checking BTC Balance...");
-    const btcBalance = await getBitcoinBalance(btcAddress);
-    if (btcBalance !== null) console.log(`Bitcoin Balance: ${btcBalance} BTC`);
-
-    console.log("Checking ETH Balance...");
-    const ethBalance = await getEthereumBalance(ethAddress);
-    if (ethBalance !== null) console.log(`Ethereum Balance: ${ethBalance} ETH`);
-}
-
-main();
-Run the Script
-Execute the script in the terminal:
-
-bash
-Copy
-Edit
-node balanceChecker.js
+node Check.js
 Expected Output
 Example output for the given addresses:
 
-yaml
-Copy
-Edit
+
 Checking BTC Balance...
 Bitcoin Balance: 68.84922675 BTC
 Checking ETH Balance...
 Ethereum Balance: 793.527040349318671037 ETH
+
 2. HTML-Based Checker (Web Browser)
 Description
 This version provides a web page with input fields to enter Bitcoin and Ethereum addresses. It fetches balances and displays them directly on the page.
