@@ -56,65 +56,9 @@ Ethereum Balance: 793.527040349318671037 ETH
 Description
 This version provides a web page with input fields to enter Bitcoin and Ethereum addresses. It fetches balances and displays them directly on the page.
 
-Prerequisites
-Web Browser: Any modern browser (Chrome, Firefox, Safari, etc.).
-Etherscan API Key: Get a free API key from Etherscan.
-Internet Connection: Required for API calls.
-Setup and Installation
-Create an HTML File
-Create a file named balance.html and copy the following code:
 
-html
-Copy
-Edit
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Balance Checker</title>
-    <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input, button { width: 100%; margin-bottom: 10px; padding: 10px; border-radius: 4px; }
-        button { background: #007bff; color: white; border: none; cursor: pointer; }
-        button:hover { background: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Crypto Balance Checker</h1>
-        <label for="btcAddress">Bitcoin Address:</label>
-        <input id="btcAddress" type="text" placeholder="Enter BTC Address">
-        <div id="btcResult"></div>
-        <label for="ethAddress">Ethereum Address:</label>
-        <input id="ethAddress" type="text" placeholder="Enter ETH Address">
-        <div id="ethResult"></div>
-        <button onclick="checkBalances()">Check Balances</button>
-    </div>
-    <script>
-        async function fetchBalance(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                return { error: error.message };
-            }
-        }
-        async function checkBalances() {
-            const btcAddress = document.getElementById("btcAddress").value;
-            const ethAddress = document.getElementById("ethAddress").value;
-            const btcResult = await fetchBalance(`https://blockchain.info/balance?active=${btcAddress}`);
-            document.getElementById("btcResult").textContent = btcResult.error || `BTC Balance: ${btcResult[btcAddress]?.final_balance / 1e8} BTC`;
-            const ethResult = await fetchBalance(`https://api.etherscan.io/api?module=account&action=balance&address=${ethAddress}&apikey=YOUR_ETHERSCAN_API_KEY`);
-            document.getElementById("ethResult").textContent = ethResult.error || `ETH Balance: ${ethResult.result / 1e18} ETH`;
-        }
-    </script>
-</body>
-</html>
 Open in Browser
-Open the balance.html file in your web browser.
+Open the index.html file in your web browser.
 
 Check Balances
 Enter Bitcoin and Ethereum addresses and click the "Check Balances" button.
