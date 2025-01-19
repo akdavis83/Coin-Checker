@@ -39,6 +39,7 @@ bash
 Copy
 Edit
 npm install node-fetch bitcoin-address-validation ethers
+
 Run check.js in the VS code console
 
 
