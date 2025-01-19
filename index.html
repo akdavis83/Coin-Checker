@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Balance Checker</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+         button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+         button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+             margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Crypto Balance Checker</h1>
+        <div>
+            <label for="btcAddress">Bitcoin Address:</label>
+            <input type="text" id="btcAddress" placeholder="Enter BTC Address">
+            <div id="btcResult" class="result"></div>
+        </div>
+        <div>
+            <label for="ethAddress">Ethereum Address:</label>
+            <input type="text" id="ethAddress" placeholder="Enter ETH Address">
+            <div id="ethResult" class="result"></div>
+        </div>
+          <button onclick="checkBalances()">Check Balances</button>
+    </div>
+
+    <script>
+          // Function to validate Bitcoin addresses using the regex
+         function isValidBitcoinAddress(address) {
+            const btcRegex = /^(bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39}$/;
+            return btcRegex.test(address);
+         }
+
+        // Function to validate Ethereum Addresses
+        function isValidEthereumAddress(address) {
+          const ethRegex = /^0x[a-fA-F0-9]{40}$/;
+          return ethRegex.test(address);
+        }
+
+
+        async function getBitcoinBalance(address) {
+            if (!isValidBitcoinAddress(address)) {
+                return "Invalid Bitcoin address.";
+            }
+            const apiUrl = `https://blockchain.info/balance?active=${address}`;
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                  const balanceSatoshi = data[address].final_balance;
+                const balanceBTC = balanceSatoshi / 100000000;
+                return `Bitcoin Balance: ${balanceBTC} BTC`;
+            } catch (error) {
+               return  "Error fetching Bitcoin balance: " + error;
+            }
+        }
+
+        async function getEthereumBalance(address) {
+            if (!isValidEthereumAddress(address)) {
+                return "Invalid Ethereum address.";
+            }
+            const apiUrl = `https://api.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=YOUR_ETHERSCAN_API_KEY`;
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.status === "1") {
+                      const balanceWei = data.result;
+                    const balanceEth = parseFloat(ethers.utils.formatEther(balanceWei));
+                    return `Ethereum Balance: ${balanceEth} ETH`;
+                } else {
+                   return "Error from Etherscan API: " + data.message;
+                }
+
+            } catch (error) {
+                 return "Error fetching Ethereum balance: " + error;
+            }
+        }
+
+
+        async function checkBalances() {
+            const btcAddress = document.getElementById("btcAddress").value;
+            const ethAddress = document.getElementById("ethAddress").value;
+
+            document.getElementById("btcResult").textContent = "Loading...";
+            document.getElementById("ethResult").textContent = "Loading...";
+
+
+            const btcResult = await getBitcoinBalance(btcAddress);
+            document.getElementById("btcResult").textContent = btcResult;
+
+            const ethResult = await getEthereumBalance(ethAddress);
+            document.getElementById("ethResult").textContent = ethResult;
+        }
+    </script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
+
+</body>
+</html>
