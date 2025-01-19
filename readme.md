@@ -19,7 +19,7 @@ This version uses Node.js to fetch Bitcoin and Ethereum balances from public API
 
 ### Setup and Installation
 1. **Create a Project Directory**  
-   Create a folder for your project (e.g., `crypto-checker`).
+   Create a folder for your project (e.g., `check`).
 
 2. **Navigate to the Directory**  
    Open a terminal and navigate to the folder:
