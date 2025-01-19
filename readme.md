@@ -24,7 +24,7 @@ This version uses Node.js to fetch Bitcoin and Ethereum balances from public API
 2. **Navigate to the Directory**  
    Open a terminal and navigate to the folder:
    ```bash
-   cd crypto-checker
+   cd check
 Initialize the Project
 Create a package.json file:
 
